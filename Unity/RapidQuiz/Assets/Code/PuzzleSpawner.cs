@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PuzzleSpawner : MonoBehaviour
 {
 	public GameObject Puzzle1Area, Puzzle2Area;
 	public GameObject[] Puzzles;
 	public GameManager GameManager;
+
+
 
 	public void SpawnPuzzle(int puzzleIndex)
 	{
@@ -18,6 +21,8 @@ public class PuzzleSpawner : MonoBehaviour
 		{
 			Instantiate(puzzlesToSpawn[0], Puzzle1Area.transform);
 			Instantiate(puzzlesToSpawn[1], Puzzle2Area.transform);
+			SetActivePuzzles(puzzlesToSpawn[0], puzzlesToSpawn[1]);
+
 		}
 		else
 		{
@@ -30,8 +35,9 @@ public class PuzzleSpawner : MonoBehaviour
 		var puzzlesToSpawn = Puzzles.Where(puzzle => puzzle.name.Contains(name)).ToArray();
 		if (puzzlesToSpawn.Length >= 2)
 		{
-			Instantiate(puzzlesToSpawn[0], Puzzle1Area.transform);
-			Instantiate(puzzlesToSpawn[1], Puzzle2Area.transform);
+			var puzzle1 = Instantiate(puzzlesToSpawn[0], Puzzle1Area.transform);
+			var puzzle2 = Instantiate(puzzlesToSpawn[1], Puzzle2Area.transform);
+			SetActivePuzzles(puzzle1, puzzle2);
 		}
 		else
 		{
