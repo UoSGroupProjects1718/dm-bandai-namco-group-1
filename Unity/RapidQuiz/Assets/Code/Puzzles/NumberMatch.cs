@@ -27,11 +27,6 @@ public class NumberMatch : Puzzle
 		}
 	}
 	
-	// Update is called once per frame
-	public override void Tick ()
-	{
-	}
-
 	public override void Begin()
 	{
 		SetupGameobjectData();
@@ -45,6 +40,20 @@ public class NumberMatch : Puzzle
 		StartCoroutine(WordCycle());
 
 	}
+	
+	// Update is called once per frame
+	public override void Tick ()
+	{
+		
+	}
+	
+	public override void End()
+	{
+		running = false;
+		StopAllCoroutines();
+	}
+
+	
 
 	private void SetupGameobjectData()
 	{
@@ -62,11 +71,7 @@ public class NumberMatch : Puzzle
 		End();
 	}
 	
-	public override void End()
-	{
-		running = false;
-		StopAllCoroutines();
-	}
+	
 
 	private void SetPlayerNumberTexts(int number, string literalNumber)
 	{
@@ -164,7 +169,6 @@ public class NumberMatch : Puzzle
 			Debug.Log("Wrong!");
 			GameObject.Find("GameManager").GetComponent<GameManager>().DecreasePlayer1Score();
 		}
-		
 	}
 	
 	public void RegisterPlayer2Match()
@@ -181,7 +185,6 @@ public class NumberMatch : Puzzle
 			Debug.Log("Wrong!");
 			GameObject.Find("GameManager").GetComponent<GameManager>().DecreasePlayer2Score();
 		}
-		
 	}
 	
 	

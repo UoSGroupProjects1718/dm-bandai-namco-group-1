@@ -14,11 +14,12 @@ public class GameManager : MonoBehaviour
 	public Text[] playerScores = new Text[2];
 
 	public NumberMatch NumberMatchScript;
+	public GridColours GridColoursScript;
 
 	void Start ()
 	{
 		PuzzleSpawner.RemoveActivePuzzles();
-		SpawnColourMatchingPuzzle();
+		SpawnGridColoursPuzzle();
 		Begin();
 	}
 
@@ -51,6 +52,15 @@ public class GameManager : MonoBehaviour
 	{
 		PuzzleSpawner.SpawnPuzzle("NumberMatch");
 		_activePuzzleScript = NumberMatchScript.GetComponent<NumberMatch>();
+		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
+		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
+		_activePuzzleScript.SetTimer();
+	}
+
+	private void SpawnGridColoursPuzzle()
+	{
+		PuzzleSpawner.SpawnPuzzle("GridColours");
+		_activePuzzleScript = GridColoursScript.GetComponent<GridColours>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
 		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
 		_activePuzzleScript.SetTimer();
