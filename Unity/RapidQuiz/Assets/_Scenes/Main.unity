@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95bb5f2c11a0787408a30d15d4c6c6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentTime: 0
+  CurrentTime: 0
 --- !u!1 &258323213
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,7 +661,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea7c32b2621def4b9c725e9db1be69b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  running: 0
+  Running: 0
+  SecondsBetweenGridSwitch: 2
+  MatchChance: 0.5
 --- !u!1001 &1013680981
 Prefab:
   m_ObjectHideFlags: 0
@@ -1292,7 +1294,7 @@ MonoBehaviour:
   PuzzleSpawner: {fileID: 804395649}
   Timer: {fileID: 145211453}
   ActivePuzzles: []
-  playerScores:
+  PlayerScores:
   - {fileID: 681409432}
   - {fileID: 1534189571}
   NumberMatchScript: {fileID: 1767214633}

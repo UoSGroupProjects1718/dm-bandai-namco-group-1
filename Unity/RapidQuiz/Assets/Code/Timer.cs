@@ -7,27 +7,27 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public float _currentTime;
+    public float CurrentTime;
     private bool _running;
-    private Text timerText;
+    private Text _timerText;
 
     void Start()
     {
         Debug.Log("starting timer up");
-        _currentTime = 10f;
-        timerText = gameObject.GetComponent<Text>();
+        CurrentTime = 10f;
+        _timerText = gameObject.GetComponent<Text>();
     }
 
     void Update()
     {
         if (!_running) return;
-        if (_currentTime < float.Epsilon)
+        if (CurrentTime < float.Epsilon)
         {
             OnTimerComplete(EventArgs.Empty);
             Stop();
         }
-        _currentTime -= Time.deltaTime;
-        timerText.text = _currentTime.ToString("F0");
+        CurrentTime -= Time.deltaTime;
+        _timerText.text = CurrentTime.ToString("F0");
         
     }
     
@@ -38,15 +38,15 @@ public class Timer : MonoBehaviour
     
     public void Begin(float time)
     {
-        _currentTime = time;
+        CurrentTime = time;
         _running = true;
     }
 
     public void Reset(float timeLimit)
     {
         Stop();
-        _currentTime = timeLimit;
-        timerText.text = _currentTime.ToString("F0");
+        CurrentTime = timeLimit;
+        _timerText.text = CurrentTime.ToString("F0");
     }
 
     public void Stop()

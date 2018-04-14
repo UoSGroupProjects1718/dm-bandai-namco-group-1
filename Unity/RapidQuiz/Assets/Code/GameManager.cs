@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 	public GameObject[] ActivePuzzles;
 	private Puzzle _activePuzzleScript;
 
-	public Text[] playerScores = new Text[2];
+	public Text[] PlayerScores = new Text[2];
 
 	public NumberMatch NumberMatchScript;
 	public GridColours GridColoursScript;
@@ -68,21 +68,21 @@ public class GameManager : MonoBehaviour
 
 	public void IncreasePlayer1Score(int amount = 1)
 	{
-		playerScores[0].text = (int.Parse(playerScores[0].text) + amount).ToString();
+		PlayerScores[0].text = (int.Parse(PlayerScores[0].text) + amount).ToString();
 	}
 	
 	public void IncreasePlayer2Score(int amount = 1)
 	{
-		playerScores[1].text = (int.Parse(playerScores[1].text) + amount).ToString();
+		PlayerScores[1].text = (int.Parse(PlayerScores[1].text) + amount).ToString();
 	}
 	
 	public void DecreasePlayer1Score(int amount = 1)
 	{
-		playerScores[0].text = (int.Parse(playerScores[0].text) - amount).ToString();
+		PlayerScores[0].text = (int.Parse(PlayerScores[0].text) - amount).ToString();
 	}
 	
 	public void DecreasePlayer2Score(int amount = 1)
 	{
-		playerScores[1].text = (int.Parse(playerScores[1].text) - amount).ToString();
+		PlayerScores[1].text = (int.Parse(PlayerScores[1].text) - amount).ToString();
 	}
 }

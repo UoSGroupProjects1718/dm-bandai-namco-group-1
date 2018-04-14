@@ -10,11 +10,11 @@ public class NumberMatch : Puzzle
 	private const int MaxNumber = 100;
 	
 	private Dictionary<int, string> _dictionary;
-	private Text Player1Number, Player1NumberString;
-	private Text Player2Number, Player2NumberString;
-	private Button Player1Button, Player2Button;
+	private Text _player1Number, _player1NumberString;
+	private Text _player2Number, _player2NumberString;
+	private Button _player1Button, _player2Button;
 	
-	public System.Random rng = new System.Random();
+	public System.Random Rng = new System.Random();
 	
 
 	// Use this for initialization
@@ -30,10 +30,10 @@ public class NumberMatch : Puzzle
 	public override void Begin()
 	{
 		SetupGameobjectData();
-		Player1Button.onClick.AddListener(RegisterPlayer1Match);
-		Player2Button.onClick.AddListener(RegisterPlayer2Match);
+		_player1Button.onClick.AddListener(RegisterPlayer1Match);
+		_player2Button.onClick.AddListener(RegisterPlayer2Match);
 	
-		running = true;
+		Running = true;
 		Timer.TimerComplete += TimerEnded;
 		Timer.Begin(15f);
 
@@ -49,7 +49,7 @@ public class NumberMatch : Puzzle
 	
 	public override void End()
 	{
-		running = false;
+		Running = false;
 		StopAllCoroutines();
 	}
 
@@ -57,12 +57,12 @@ public class NumberMatch : Puzzle
 
 	private void SetupGameobjectData()
 	{
-		Player1Number = Player1Puzzle.transform.Find("Number").GetComponent<Text>();
-		Player2Number = Player2Puzzle.transform.Find("Number").GetComponent<Text>();
-		Player1NumberString = Player1Puzzle.transform.Find("NumberString").GetComponent<Text>();
-		Player2NumberString = Player2Puzzle.transform.Find("NumberString").GetComponent<Text>();
-		Player1Button = Player1Puzzle.transform.Find("MatchButton").GetComponent<Button>();
-		Player2Button = Player2Puzzle.transform.Find("MatchButton").GetComponent<Button>();
+		_player1Number = Player1Puzzle.transform.Find("Number").GetComponent<Text>();
+		_player2Number = Player2Puzzle.transform.Find("Number").GetComponent<Text>();
+		_player1NumberString = Player1Puzzle.transform.Find("NumberString").GetComponent<Text>();
+		_player2NumberString = Player2Puzzle.transform.Find("NumberString").GetComponent<Text>();
+		_player1Button = Player1Puzzle.transform.Find("MatchButton").GetComponent<Button>();
+		_player2Button = Player2Puzzle.transform.Find("MatchButton").GetComponent<Button>();
 	}
 
 	private void TimerEnded(object sender, EventArgs e)
@@ -76,30 +76,30 @@ public class NumberMatch : Puzzle
 	private void SetPlayerNumberTexts(int number, string literalNumber)
 	{
 		RandomiseNumberTextColours();
-		Player1Number.text = number.ToString("F0");
-		Player2Number.text = number.ToString("F0");
-		Player1NumberString.text = literalNumber;
-		Player2NumberString.text = literalNumber;
+		_player1Number.text = number.ToString("F0");
+		_player2Number.text = number.ToString("F0");
+		_player1NumberString.text = literalNumber;
+		_player2NumberString.text = literalNumber;
 	}
 
 	private void RandomiseNumberTextColours()
 	{
-		Player1Number.color = new Color(
+		_player1Number.color = new Color(
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f)
 		);
-		Player2Number.color = new Color(
+		_player2Number.color = new Color(
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f)
 		);
-		Player1NumberString.color = new Color(
+		_player1NumberString.color = new Color(
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f)
 		);
-		Player2NumberString.color = new Color(
+		_player2NumberString.color = new Color(
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f),
 			UnityEngine.Random.Range(0f, 1f)
@@ -110,19 +110,19 @@ public class NumberMatch : Puzzle
 	{
 		if (player1)
 		{
-			Player1Number.text = number.ToString();
-			Player1NumberString.text = literalNumber;
+			_player1Number.text = number.ToString();
+			_player1NumberString.text = literalNumber;
 		}
 		else
 		{
-			Player2Number.text = number.ToString();
-			Player2NumberString.text = literalNumber;
+			_player2Number.text = number.ToString();
+			_player2NumberString.text = literalNumber;
 		}
 	}
 
 	private IEnumerator WordCycle()
 	{
-		while (running)
+		while (Running)
 		{
 			GenerateMatch();
 			yield return new WaitForSeconds(2);
@@ -131,16 +131,16 @@ public class NumberMatch : Puzzle
 
 	private void GenerateMatch()
 	{
-		var gen = rng.Next(1,3); // Either 1 or 2
+		var gen = Rng.Next(1,3); // Either 1 or 2
 		if (gen == 1)
 		{
-			var roll = rng.Next(1, MaxNumber+1);
+			var roll = Rng.Next(1, MaxNumber+1);
 			SetPlayerNumberTexts(roll, _dictionary[roll]);
 		}
 		else
 		{
-			var roll = rng.Next(1, MaxNumber+1);
-			SetPlayerNumberTexts(rng.Next(1, MaxNumber+1), _dictionary[roll]);
+			var roll = Rng.Next(1, MaxNumber+1);
+			SetPlayerNumberTexts(Rng.Next(1, MaxNumber+1), _dictionary[roll]);
 		}
 	}
 
@@ -156,7 +156,7 @@ public class NumberMatch : Puzzle
 
 	public void RegisterPlayer1Match()
 	{
-		if (CheckMatch(int.Parse(Player1Number.text), Player1NumberString.text))
+		if (CheckMatch(int.Parse(_player1Number.text), _player1NumberString.text))
 		{
 			Debug.Log("Right!");
 			GameObject.Find("GameManager").GetComponent<GameManager>().IncreasePlayer1Score();
@@ -173,7 +173,7 @@ public class NumberMatch : Puzzle
 	
 	public void RegisterPlayer2Match()
 	{
-		if (CheckMatch(int.Parse(Player2Number.text), Player2NumberString.text))
+		if (CheckMatch(int.Parse(_player2Number.text), _player2NumberString.text))
 		{
 			Debug.Log("Right!");
 			GameObject.Find("GameManager").GetComponent<GameManager>().IncreasePlayer2Score();

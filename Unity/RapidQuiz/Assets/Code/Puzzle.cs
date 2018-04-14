@@ -4,11 +4,11 @@ using UnityEngine;
 
 public abstract class Puzzle : MonoBehaviour
 {
-	protected GameManager gm;
+	protected GameManager Gm;
 	protected Timer Timer;
 	protected GameObject Player1Puzzle;
 	protected GameObject Player2Puzzle;
-	public bool running = false;
+	public bool Running = false;
 	
 	public abstract void Begin();
 	public abstract void Tick();
@@ -16,7 +16,7 @@ public abstract class Puzzle : MonoBehaviour
 
 	private void Start()
 	{
-		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+		Gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
 	public virtual void SetTimer()
