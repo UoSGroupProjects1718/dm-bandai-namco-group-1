@@ -27,11 +27,6 @@ public class GridColours : Puzzle
         StartCoroutine(RandomiseGrid());
     }
 
-    public override void Tick()
-    {
-        throw new System.NotImplementedException();
-    }
-
     private IEnumerator RandomiseGrid()
     {
         while (Running)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Puzzle : MonoBehaviour
+public class Puzzle : MonoBehaviour
 {
 	protected GameManager Gm;
 	protected Timer Timer;
@@ -10,9 +10,9 @@ public abstract class Puzzle : MonoBehaviour
 	protected GameObject Player2Puzzle;
 	public bool Running = false;
 	
-	public abstract void Begin();
-	public abstract void Tick();
-	public abstract void End();
+	public virtual void Begin() {}
+	public virtual void Tick() {}
+	public virtual void End() {}
 
 	private void Start()
 	{
