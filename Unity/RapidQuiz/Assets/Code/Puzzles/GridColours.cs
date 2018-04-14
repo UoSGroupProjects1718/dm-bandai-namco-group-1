@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Utility;
 
 public class GridColours : Puzzle
 {
@@ -27,6 +28,7 @@ public class GridColours : Puzzle
         StartCoroutine(RandomiseGrid());
     }
 
+
     private IEnumerator RandomiseGrid()
     {
         while (Running)
@@ -48,16 +50,16 @@ public class GridColours : Puzzle
 
     private void GenerateUnlikeGrids()
     {
-        var colours = GenerateColourEnumerable(_player1Grid.transform.childCount);
+        var colours = Colours.GenerateRandomColourEnumerable(_player1Grid.transform.childCount);
         ApplyColoursToGrid(_player1Grid, colours);
-        colours = GenerateColourEnumerable(_player1Grid.transform.childCount);
+        colours = Colours.GenerateRandomColourEnumerable(_player1Grid.transform.childCount);
         ApplyColoursToGrid(_player2Grid, colours);
         _matchingGrid = false;
     }
 
     private void GenerateMatchingGrid()
     {
-        var colours = GenerateColourEnumerable(_player1Grid.transform.childCount);
+        var colours = Colours.GenerateRandomColourEnumerable(_player1Grid.transform.childCount);
         ApplyColoursToGrid(_player1Grid, colours);
         ApplyColoursToGrid(_player2Grid, colours);
         _matchingGrid = true;
@@ -76,17 +78,7 @@ public class GridColours : Puzzle
         tile.gameObject.GetComponent<Image>().color = colour;
     }
 
-    private Color[] GenerateColourEnumerable(int size)
-    {
-        var colours = new Color[size];
-        for (var i = 0; i < colours.Length; i++)
-        {
-            colours[i] = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-        }
-
-        return colours;
-    }
-
+    
     public override void End()
     {
         Running = false;
