@@ -8,19 +8,21 @@ public class GameManager : MonoBehaviour
 {
 	public PuzzleSpawner PuzzleSpawner;
 	public Timer Timer;
+	public GameObject CountDown;
 	public GameObject[] ActivePuzzles;
 	private Puzzle _activePuzzleScript;
+	private Animation _countdownAnimation;
 
 	public Text[] PlayerScores = new Text[2];
 
 	public NumberMatch NumberMatchScript;
 	public GridColours GridColoursScript;
+	public OddOneOut OddOneOutScript;
 
 	void Start ()
 	{
-		PuzzleSpawner.RemoveActivePuzzles();
-		SpawnGridColoursPuzzle();
-		Begin();
+		_countdownAnimation = CountDown.GetComponent<Animation>();
+		SpawnNumberMatchingPuzzle();
 	}
 
 	void Update()
@@ -48,23 +50,45 @@ public class GameManager : MonoBehaviour
 		
 	}
 
-	private void SpawnColourMatchingPuzzle()
+	public void SpawnOddOneOutPuzzle()
 	{
+		PuzzleSpawner.RemoveActivePuzzles();
+		PuzzleSpawner.SpawnPuzzle("OddOneOut");
+		_activePuzzleScript = OddOneOutScript.GetComponent<OddOneOut>();
+		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
+		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
+		_activePuzzleScript.SetTimer();
+		Begin();
+	}
+
+	public void SpawnNumberMatchingPuzzle()
+	{
+
+		PuzzleSpawner.RemoveActivePuzzles();
 		PuzzleSpawner.SpawnPuzzle("NumberMatch");
 		_activePuzzleScript = NumberMatchScript.GetComponent<NumberMatch>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
 		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
 		_activePuzzleScript.SetTimer();
+		Begin();
+
 	}
 
-	private void SpawnGridColoursPuzzle()
+	
+
+	public void SpawnGridColoursPuzzle()
 	{
+		PuzzleSpawner.RemoveActivePuzzles();		
 		PuzzleSpawner.SpawnPuzzle("GridColours");
 		_activePuzzleScript = GridColoursScript.GetComponent<GridColours>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
 		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
 		_activePuzzleScript.SetTimer();
+		Begin();
+		
 	}
+
+
 
 	public void IncreasePlayer1Score(int amount = 1)
 	{

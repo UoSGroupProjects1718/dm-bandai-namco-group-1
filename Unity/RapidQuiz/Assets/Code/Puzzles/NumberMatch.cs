@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Collections;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ public class NumberMatch : Puzzle
 		{
 			_dictionary.Add(i, HumanFriendlyInteger.IntegerToWritten(i));	
 		}
+
+		Gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 	
 	public override void Begin()
@@ -35,10 +38,10 @@ public class NumberMatch : Puzzle
 	
 		Running = true;
 		Timer.TimerComplete += TimerEnded;
-		Timer.Begin(15f);
+		Timer.Begin(5f);
 
 		StartCoroutine(WordCycle());
-
+		Debug.Log("Number Match Started");
 	}
 	
 	// Update is called once per frame
@@ -49,8 +52,12 @@ public class NumberMatch : Puzzle
 	
 	public override void End()
 	{
+		Debug.Log("Ended");
 		Running = false;
 		StopAllCoroutines();
+		Debug.Log("Number Match Ended");
+		Debug.Log("Spawning Grid Colours");
+		Gm.SpawnGridColoursPuzzle();
 	}
 
 	
@@ -70,8 +77,6 @@ public class NumberMatch : Puzzle
 		Debug.Log("Timer Ended");
 		End();
 	}
-	
-	
 
 	private void SetPlayerNumberTexts(int number, string literalNumber)
 	{

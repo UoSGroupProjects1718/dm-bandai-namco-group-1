@@ -26,8 +26,14 @@ public class GridColours : Puzzle
         Timer.Begin(15f);
 
         StartCoroutine(RandomiseGrid());
+        Debug.Log("GridColours Started");
+
     }
 
+    public override void Tick()
+    {
+        base.Tick();
+    }
 
     private IEnumerator RandomiseGrid()
     {
@@ -83,6 +89,7 @@ public class GridColours : Puzzle
     {
         Running = false;
         StopAllCoroutines();
+        Debug.Log("GridColours Ended");
     }
 
     private void SetupGameobjectData()

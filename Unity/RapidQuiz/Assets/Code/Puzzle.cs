@@ -33,4 +33,9 @@ public class Puzzle : MonoBehaviour
 	{
 		Player2Puzzle = player2Puzzle;
 	}
+
+	private void OnDestroy()
+	{
+		StopAllCoroutines();
+	}
 }

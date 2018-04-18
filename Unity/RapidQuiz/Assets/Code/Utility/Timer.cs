@@ -24,7 +24,14 @@ public class Timer : MonoBehaviour
         if (CurrentTime < float.Epsilon)
         {
             OnTimerComplete(EventArgs.Empty);
-            Stop();
+            
+            // Check again because there is no guarantee CurrentTime won't change during an event.
+            if (CurrentTime < float.Epsilon)
+            {
+                Stop();
+
+            }
+            
         }
         CurrentTime -= Time.deltaTime;
         _timerText.text = CurrentTime.ToString("F0");
