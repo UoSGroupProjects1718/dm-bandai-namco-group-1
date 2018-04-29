@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 	public GameObject CountDown;
 	public GameObject[] ActivePuzzles;
 	private Puzzle _activePuzzleScript;
-	private Animation _countdownAnimation;
+	private Text _countdownText;
 
 	public Text[] PlayerScores = new Text[2];
 
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
 	{
-		_countdownAnimation = CountDown.GetComponent<Animation>();
+		_countdownText = CountDown.GetComponent<Text>();
 		SpawnNumberMatchingPuzzle();
 	}
 
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
 
 	public void SpawnOddOneOutPuzzle()
 	{
-		PuzzleSpawner.RemoveActivePuzzles();
+		Timer.gameObject.SetActive(true);
 		PuzzleSpawner.SpawnPuzzle("OddOneOut");
 		_activePuzzleScript = OddOneOutScript.GetComponent<OddOneOut>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviour
 	public void SpawnNumberMatchingPuzzle()
 	{
 
-		PuzzleSpawner.RemoveActivePuzzles();
+		Timer.gameObject.SetActive(true);
 		PuzzleSpawner.SpawnPuzzle("NumberMatch");
 		_activePuzzleScript = NumberMatchScript.GetComponent<NumberMatch>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
@@ -74,11 +75,10 @@ public class GameManager : MonoBehaviour
 
 	}
 
-	
 
 	public void SpawnGridColoursPuzzle()
 	{
-		PuzzleSpawner.RemoveActivePuzzles();		
+		Timer.gameObject.SetActive(true);
 		PuzzleSpawner.SpawnPuzzle("GridColours");
 		_activePuzzleScript = GridColoursScript.GetComponent<GridColours>();
 		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
@@ -108,5 +108,26 @@ public class GameManager : MonoBehaviour
 	public void DecreasePlayer2Score(int amount = 1)
 	{
 		PlayerScores[1].text = (int.Parse(PlayerScores[1].text) - amount).ToString();
+	}
+
+	public void SpawnNextPuzzle(Action puzzle)
+	{
+		PuzzleSpawner.RemoveActivePuzzles();		
+		Timer.gameObject.SetActive(false);
+		StartCoroutine(Countdown(3, puzzle));
+	}
+
+	public IEnumerator Countdown(int seconds, Action puzzle)
+	{
+		CountDown.SetActive(true);
+		var countdownTimer = (float)seconds;
+		while (countdownTimer >= float.Epsilon)
+		{
+			countdownTimer -= Time.deltaTime;
+			_countdownText.text = countdownTimer.ToString("F0");
+			yield return new WaitForEndOfFrame();
+		}
+		CountDown.SetActive(false);
+		puzzle.Invoke();	
 	}
 }

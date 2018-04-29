@@ -57,7 +57,7 @@ public class NumberMatch : Puzzle
 		StopAllCoroutines();
 		Debug.Log("Number Match Ended");
 		Debug.Log("Spawning Grid Colours");
-		Gm.SpawnGridColoursPuzzle();
+		Gm.SpawnNextPuzzle(Gm.SpawnGridColoursPuzzle);
 	}
 
 	
