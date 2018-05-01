@@ -19,11 +19,12 @@ public class GameManager : MonoBehaviour
 	public NumberMatch NumberMatchScript;
 	public GridColours GridColoursScript;
 	public OddOneOut OddOneOutScript;
+	public ColourWord ColourWordScript;
 
 	void Start ()
 	{
 		_countdownText = CountDown.GetComponent<Text>();
-		SpawnNextPuzzle(SpawnGridColoursPuzzle);
+		SpawnNextPuzzle(SpawnColourWordPuzzle);
 	}
 
 	void Update()
@@ -71,7 +72,6 @@ public class GameManager : MonoBehaviour
 		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
 		_activePuzzleScript.SetTimer();
 		Begin();
-
 	}
 
 
@@ -84,10 +84,18 @@ public class GameManager : MonoBehaviour
 		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
 		_activePuzzleScript.SetTimer();
 		Begin();
-		
 	}
-
-
+	
+	public void SpawnColourWordPuzzle()
+	{
+		Timer.gameObject.SetActive(true);
+		PuzzleSpawner.SpawnPuzzle("ColourWord");
+		_activePuzzleScript = ColourWordScript.GetComponent<ColourWord>();
+		_activePuzzleScript.SetPlayer1PuzzleObject(ActivePuzzles[0]);
+		_activePuzzleScript.SetPlayer2PuzzleObject(ActivePuzzles[1]);
+		_activePuzzleScript.SetTimer();
+		Begin();
+	}
 
 	public void IncreasePlayer1Score(int amount = 1)
 	{

@@ -38,7 +38,7 @@ public class NumberMatch : Puzzle
 	
 		Running = true;
 		Timer.TimerComplete += TimerEnded;
-		Timer.Begin(5f);
+		Timer.Begin(15f);
 
 		StartCoroutine(WordCycle());
 		Debug.Log("Number Match Started");
