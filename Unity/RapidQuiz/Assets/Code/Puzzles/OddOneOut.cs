@@ -1,56 +1,123 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class OddOneOut : Puzzle
 {
-	public GameObject TilePrefab;
+	private Button _player1Button, _player2Button;
 	private GameObject _tileContainerPlayer1, _tileContainerPlayer2;
 	public List<Sprite> Sprites = new List<Sprite>();
-	private List<List<GameObject>> _tilesPlayer1 = new List<List<GameObject>>();
-	private	List<List<GameObject>> _tilesPlayer2 = new List<List<GameObject>>();
-	public int Height = 2;
-	public int Width = 5;
+	private bool _switched;
+	private int _startingSpriteIndex;
+
+	[Range(1, 10f)]
+	public float MaxWaitTime = 1f;
+	[Range(1, 10f)] public float MinWaitTime = 10f;
 
 	public override void Begin()
 	{
+		_player1Button = Player1Puzzle.transform.Find("Button").GetComponent<Button>();
+		_player2Button = Player2Puzzle.transform.Find("Button").GetComponent<Button>();
 		_tileContainerPlayer1 = Player1Puzzle.transform.Find("Tiles").gameObject;
+		_tileContainerPlayer2 = Player2Puzzle.transform.Find("Tiles").gameObject;
+		_player1Button.onClick.AddListener(RegisterPlayer1Button);
+		_player2Button.onClick.AddListener(RegisterPlayer2Button);
+
+		_startingSpriteIndex = Random.Range(0, Sprites.Count);
+		var startingSprite = Sprites[_startingSpriteIndex];
+		SetAllSprites(startingSprite, _tileContainerPlayer1);
+		SetAllSprites(startingSprite, _tileContainerPlayer2);
 		
-		for (var i = 0; i < Height; i++)
-		{
-			_tilesPlayer1.Add(new List<GameObject>());
-			for (var j = 0; j < Width; j++)
-			{
-				_tilesPlayer1[i].Add(Instantiate(TilePrefab,
-					new Vector2(
-						i * TilePrefab.GetComponent<RectTransform>().rect.width,
-						j * TilePrefab.GetComponent<RectTransform>().rect.height
-					), Quaternion.identity, _tileContainerPlayer1.transform));
-			}
-		}
-		
-		SetAllPlayer1Sprites(Sprites[Random.Range(0, Sprites.Count)]);
+		Timer.TimerComplete += TimerEnded;
+		StartCoroutine(StartRandomisation());
+		Running = true;
+		Timer.Begin(15f);
 	}
 
-	private void SetAllPlayer1Sprites(Sprite sprite)
-	{		
-		foreach (var tileList in _tilesPlayer1)
+	private void TimerEnded(object sender, EventArgs e)
+	{
+		End();
+	}
+
+	private IEnumerator StartRandomisation()
+	{
+		var timeToWait = Random.Range(MinWaitTime, MaxWaitTime);
+		yield return new WaitForSeconds(timeToWait);
+		SwitchRandomSprite();
+	}
+
+//	private List<List<GameObject>> SpawnTiles(GameObject container, GameObject tilePrefab)
+//	{
+//		var output = new List<List<GameObject>>();
+//		var containerWidth = container.GetComponent<RectTransform>().rect.width;
+//		var tileWidth = tilePrefab.GetComponent<RectTransform>().rect.width;
+//		var rightGap = (containerWidth - Width * tileWidth) / (Width - 1);
+//		
+//		for (var i = 0; i < Height; i++)
+//		{
+//			output.Add(new List<GameObject>());
+//			for (var j = 0; j < Width; j++)
+//			{
+//				// For some reason doesn't move the instantiated gameobject's position?
+//				output[i].Add(Instantiate(
+//					tilePrefab,
+//					new Vector3(i * 100, j * 100, 1),
+//					Quaternion.identity,
+//					container.transform)
+//				);
+//				
+//				// Instead we just set the position here
+//				
+//				if (rightGap > 0)
+//				{
+//					output[i][j].transform.localPosition = j != 0 ?
+//						new Vector3(j * 100 + rightGap * j, -i * 100, 1) :
+//						new Vector3(j * 100, -i * 100, 1);
+//				}
+//				else
+//				{
+//					output[i][j].transform.localPosition =
+//						new Vector3(j * 100, -i * 100, 1);
+//				}
+//			}
+//		}
+//
+//		return output;
+//	}
+
+	private void SwitchRandomSprite()
+	{
+		int spriteIndex;
+		do
 		{
-			foreach (var tile in tileList)
-			{
-				SetTileSprite(tile, sprite);
-			}
+			spriteIndex = Random.Range(0, _tileContainerPlayer1.transform.childCount);
+		} while (spriteIndex == _startingSpriteIndex);
+
+		var newSprite = Sprites[Random.Range(0, Sprites.Count)];
+		
+		SetTileSprite(_tileContainerPlayer1.transform.GetChild(spriteIndex).gameObject, newSprite);
+		SetTileSprite(_tileContainerPlayer2.transform.GetChild(spriteIndex).gameObject, newSprite);
+		_switched = true;
+	}
+
+	private void SetAllSprites(Sprite sprite, GameObject container)
+	{		
+		foreach (Transform child in container.transform)
+		{
+			SetTileSprite(child.gameObject, sprite);
 		}
 	}
 
 	private void SetTileSprite(GameObject tile, Sprite sprite)
 	{
-		var spriteRenderer = tile.GetComponent<SpriteRenderer>();
-		if (spriteRenderer)
+		var image = tile.GetComponent<Image>();
+		if (image)
 		{
-			tile.GetComponent<SpriteRenderer>().sprite = sprite;
+			image.sprite = sprite;
 		}
 	}
 
@@ -61,6 +128,37 @@ public class OddOneOut : Puzzle
 
 	public override void End()
 	{
-		base.End();
+		StopAllCoroutines();
+		Timer.TimerComplete -= TimerEnded;
+		Debug.Log("OddOneOut Ended");
+		Debug.Log("End of game!");
+	}
+	
+	private void RegisterPlayer1Button()
+	{
+		if (_switched)
+		{
+			GameObject.Find("GameManager").GetComponent<GameManager>().IncreasePlayer1Score();
+			End();
+		}
+		else
+		{
+			GameObject.Find("GameManager").GetComponent<GameManager>().DecreasePlayer1Score();
+		}
+	}
+
+
+	private void RegisterPlayer2Button()
+	{
+		if (_switched)
+		{
+			GameObject.Find("GameManager").GetComponent<GameManager>().IncreasePlayer2Score();
+			End();
+		}
+		else
+		{
+			Debug.Log("Wrong!");
+			GameObject.Find("GameManager").GetComponent<GameManager>().DecreasePlayer2Score();
+		}
 	}
 }

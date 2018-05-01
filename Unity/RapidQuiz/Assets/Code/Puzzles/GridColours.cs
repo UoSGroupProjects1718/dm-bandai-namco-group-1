@@ -30,11 +30,6 @@ public class GridColours : Puzzle
 
     }
 
-    public override void Tick()
-    {
-        base.Tick();
-    }
-
     private IEnumerator RandomiseGrid()
     {
         while (Running)
@@ -90,6 +85,9 @@ public class GridColours : Puzzle
         Running = false;
         StopAllCoroutines();
         Debug.Log("GridColours Ended");
+        Debug.Log("Spawning NumberMatching");
+        Timer.TimerComplete -= TimerEnded;
+        Gm.SpawnNextPuzzle(Gm.SpawnNumberMatchingPuzzle);
     }
 
     private void SetupGameobjectData()

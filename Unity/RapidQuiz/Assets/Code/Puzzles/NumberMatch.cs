@@ -52,12 +52,12 @@ public class NumberMatch : Puzzle
 	
 	public override void End()
 	{
-		Debug.Log("Ended");
 		Running = false;
 		StopAllCoroutines();
 		Debug.Log("Number Match Ended");
-		Debug.Log("Spawning Grid Colours");
-		Gm.SpawnNextPuzzle(Gm.SpawnGridColoursPuzzle);
+		Debug.Log("Spawning OddOneOut");
+		Timer.TimerComplete -= TimerEnded;
+		Gm.SpawnNextPuzzle(Gm.SpawnOddOneOutPuzzle);
 	}
 
 	

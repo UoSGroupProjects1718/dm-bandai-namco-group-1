@@ -23,12 +23,15 @@ public class GameManager : MonoBehaviour
 	void Start ()
 	{
 		_countdownText = CountDown.GetComponent<Text>();
-		SpawnNumberMatchingPuzzle();
+		SpawnNextPuzzle(SpawnGridColoursPuzzle);
 	}
 
 	void Update()
 	{
-		_activePuzzleScript.Tick();
+		if (_activePuzzleScript)
+		{
+			_activePuzzleScript.Tick();
+		}
 	}
 
 	public void Begin()
@@ -36,10 +39,6 @@ public class GameManager : MonoBehaviour
 		_activePuzzleScript.Begin();
 	}
 
-	public void Stop()
-	{
-		_activePuzzleScript.End();
-	}
 
 	public void SetActivePuzzles(GameObject[] puzzles)
 	{
@@ -117,17 +116,18 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(Countdown(3, puzzle));
 	}
 
-	public IEnumerator Countdown(int seconds, Action puzzle)
+	private IEnumerator Countdown(int seconds, Action puzzle)
 	{
 		CountDown.SetActive(true);
 		var countdownTimer = (float)seconds;
 		while (countdownTimer >= float.Epsilon)
 		{
 			countdownTimer -= Time.deltaTime;
-			_countdownText.text = countdownTimer.ToString("F0");
+			_countdownText.text = countdownTimer < 0.5f ? "Go!" : countdownTimer.ToString("F0");
+			
 			yield return new WaitForEndOfFrame();
 		}
 		CountDown.SetActive(false);
-		puzzle.Invoke();	
+		puzzle.Invoke();
 	}
 }
