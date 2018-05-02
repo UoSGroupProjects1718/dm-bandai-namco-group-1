@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Constraints;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -132,6 +132,8 @@ public class OddOneOut : Puzzle
 		Timer.TimerComplete -= TimerEnded;
 		Debug.Log("OddOneOut Ended");
 		Debug.Log("End of game!");
+		Running = false;
+		SceneManager.LoadScene("Scores");
 	}
 	
 	private void RegisterPlayer1Button()

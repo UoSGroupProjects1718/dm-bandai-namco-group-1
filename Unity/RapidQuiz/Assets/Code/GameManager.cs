@@ -14,12 +14,19 @@ public class GameManager : MonoBehaviour
 	private Puzzle _activePuzzleScript;
 	private Text _countdownText;
 
+	public int Player1Score { get; private set; }
+	public int Player2Score { get; private set; }
 	public Text[] PlayerScores = new Text[2];
 
 	public NumberMatch NumberMatchScript;
 	public GridColours GridColoursScript;
 	public OddOneOut OddOneOutScript;
 	public ColourWord ColourWordScript;
+
+	void Awake()
+	{
+		DontDestroyOnLoad(this);
+	}
 
 	void Start ()
 	{
@@ -100,21 +107,25 @@ public class GameManager : MonoBehaviour
 	public void IncreasePlayer1Score(int amount = 1)
 	{
 		PlayerScores[0].text = (int.Parse(PlayerScores[0].text) + amount).ToString();
+		Player1Score++;
 	}
 	
 	public void IncreasePlayer2Score(int amount = 1)
 	{
 		PlayerScores[1].text = (int.Parse(PlayerScores[1].text) + amount).ToString();
+		Player2Score++;
 	}
 	
 	public void DecreasePlayer1Score(int amount = 1)
 	{
 		PlayerScores[0].text = (int.Parse(PlayerScores[0].text) - amount).ToString();
+		Player1Score--;
 	}
 	
 	public void DecreasePlayer2Score(int amount = 1)
 	{
 		PlayerScores[1].text = (int.Parse(PlayerScores[1].text) - amount).ToString();
+		Player2Score--;
 	}
 
 	public void SpawnNextPuzzle(Action puzzle)
